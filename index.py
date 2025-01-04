@@ -54,7 +54,7 @@ driver.find_element(By.ID, "b8-Button").click()
 
 time.sleep(random.uniform(2,5))
 # Now navigate to the target page
-driver.get("https://www.studentenwoningweb.nl/WoningOverzicht")
+driver.get(os.getenv('URL') + "/WoningOverzicht")
 
 # Wait for the expand button to be clickable
 try: 
