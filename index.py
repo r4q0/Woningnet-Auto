@@ -4,7 +4,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
+from dotenv import load_dotenv
 import random
+import os
+
+load_dotenv()
+
 
 options = Options()
 
@@ -14,14 +19,14 @@ user_agents = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/602.3.12 (KHTML, like Gecko) Version/10.1.2 Safari/602.3.12",
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134",
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36"
-]
+]   
 
 random_user_agent = random.choice(user_agents)
 options.set_preference("general.useragent.override", random_user_agent)
 
 driver = webdriver.Firefox(options=options)
 
-driver.get("https://www.studentenwoningweb.nl")
+driver.get(os.getenv('URL'))
 
 try:
     accept_cookies_button = WebDriverWait(driver, 10).until(
@@ -37,7 +42,8 @@ WebDriverWait(driver, 10).until(
 )
 
 # Enter login credentials (replace with your actual credentials)
-
+username = os.getenv('EMAIL')
+password = os.getenv('PASSWORD')
 
 # Locate the username and password fields and enter the credentials
 driver.find_element(By.ID, "Input_UsernameVal").send_keys(username)
