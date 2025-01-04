@@ -63,3 +63,14 @@ sort_button = WebDriverWait(driver, 10).until(
 
 sort_button.click()
 
+# Find the parent div
+parent_div = driver.find_element(By.XPATH, "//div[@data-list='' and contains(@class, 'list list-group border_width_line_top OSFillParent')]")
+# Find all clickable divs inside the parent div
+clickable_divs = parent_div.find_elements(By.CSS_SELECTOR, ".OSBlockWidget a")
+
+# Open each div in a new tab
+for i, div in enumerate(clickable_divs[:2]):
+    href = div.get_attribute("href")
+    driver.execute_script(f"window.open('{href}', '_blank');")
+    time.sleep(random.uniform(1, 3))  # Random sleep to mimic human behavior
+
