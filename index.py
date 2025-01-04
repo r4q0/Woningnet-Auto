@@ -6,10 +6,10 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 from dotenv import load_dotenv
 import random
+from plyer import notification
 import os
 
 load_dotenv()
-
 
 options = Options()
 
@@ -26,81 +26,97 @@ options.set_preference("general.useragent.override", random_user_agent)
 
 driver = webdriver.Firefox(options=options)
 
-driver.get(os.getenv('URL'))
-
 try:
-    accept_cookies_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.ID, "cookiescript_accept"))
-    )
-    accept_cookies_button.click()
-except Exception as e:
-    print(f"Error clicking accept cookies button: {e}")
+    driver.get(os.getenv('URL'))
 
-# Wait for the login form to be present
-WebDriverWait(driver, 10).until(
-    EC.presence_of_element_located((By.ID, "LoginForm"))
-)
-
-# Enter login credentials (replace with your actual credentials)
-username = os.getenv('EMAIL')
-password = os.getenv('PASSWORD')
-
-# Locate the username and password fields and enter the credentials
-driver.find_element(By.ID, "Input_UsernameVal").send_keys(username)
-driver.find_element(By.ID, "Input_PasswordVal").send_keys(password)
-
-# Submit the login form
-driver.find_element(By.ID, "b8-Button").click()
-
-time.sleep(random.uniform(2,5))
-# Now navigate to the target page
-driver.get(os.getenv('URL') + "/WoningOverzicht")
-
-# Wait for the expand button to be clickable
-try: 
-    expand_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//span[@data-expression='' and contains(@class, 'font-bold') and text()='Match met je wensen']"))
-    )
-    expand_button.click()
-except Exception as e:
-    print(f"Error clicking expand button: {e}")
-
-# Wait for the sort button to be clickable
-try:
-    sort_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//span[@data-expression='' and text()='Tijd over om te reageren']"))
-    )
-    sort_button.click()
-except Exception as e:
-    print(f"Error clicking sort button: {e}")
-
-# Find the parent div
-parent_div = driver.find_element(By.XPATH, "//div[@data-list='' and contains(@class, 'list list-group border_width_line_top OSFillParent')]")
-# Find all clickable divs inside the parent div
-clickable_divs = parent_div.find_elements(By.CSS_SELECTOR, ".OSBlockWidget a")
-
-# Open each div in a new tab
-for i, div in enumerate(clickable_divs[:int(os.getenv('MAX-INSCHRIJVINGEN'))]):
-    href = div.get_attribute("href")
-    driver.execute_script(f"window.open('{href}', '_blank');")
-    time.sleep(random.uniform(1, 3))  # Random sleep to mimic human behavior
-
-    print("opening new tab")
-    driver.switch_to.window(driver.window_handles[-1])
-
-    # Wait for the button to be clickable and click it
     try:
-        reageren_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[@class='btn btn-primary OSFillParent' and text()='Reageren op deze Woning']"))
+        accept_cookies_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.ID, "cookiescript_accept"))
         )
-        reageer_button_text = reageren_button.text  # Ensure we get the correct button
-        print(f"Clicking button: {reageer_button_text} on tab {i + 1}")
-        reageren_button.click()
+        accept_cookies_button.click()
     except Exception as e:
-        print(f"Error clicking reageren button on tab {i + 1}: {e}")
+        print(f"Error clicking accept cookies button: {e}")
 
-    # After clicking, switch back to the main tab (index 0)
-    time.sleep(random.uniform(1, 3))  # Random sleep before proceeding to the next div
-    driver.close()
-    driver.switch_to.window(driver.window_handles[0])
-driver.quit()
+    # Wait for the login form to be present
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "LoginForm"))
+    )
+
+    # Enter login credentials (replace with your actual credentials)
+    username = os.getenv('EMAIL')
+    password = os.getenv('PASSWORD')
+
+    # Locate the username and password fields and enter the credentials
+    driver.find_element(By.ID, "Input_UsernameVal").send_keys(username)
+    driver.find_element(By.ID, "Input_PasswordVal").send_keys(password)
+
+    # Submit the login form
+    driver.find_element(By.ID, "b8-Button").click()
+
+    time.sleep(random.uniform(2, 5))
+    # Now navigate to the target page
+    driver.get(os.getenv('URL') + "/WoningOverzicht")
+
+    # Wait for the expand button to be clickable
+    try: 
+        expand_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//span[@data-expression='' and contains(@class, 'font-bold') and text()='Match met je wensen']"))
+        )
+        expand_button.click()
+    except Exception as e:
+        print(f"Error clicking expand button: {e}")
+
+    # Wait for the sort button to be clickable
+    try:
+        sort_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//span[@data-expression='' and text()='Tijd over om te reageren']"))
+        )
+        sort_button.click()
+    except Exception as e:
+        print(f"Error clicking sort button: {e}")
+
+    # Find the parent div
+    parent_div = driver.find_element(By.XPATH, "//div[@data-list='' and contains(@class, 'list list-group border_width_line_top OSFillParent')]")
+    # Find all clickable divs inside the parent div
+    clickable_divs = parent_div.find_elements(By.CSS_SELECTOR, ".OSBlockWidget a")
+
+    # Open each div in a new tab
+    for i, div in enumerate(clickable_divs[:int(os.getenv('MAX-INSCHRIJVINGEN'))]):
+        href = div.get_attribute("href")
+        driver.execute_script(f"window.open('{href}', '_blank');")
+        time.sleep(random.uniform(1, 3))  # Random sleep to mimic human behavior
+
+        print("opening new tab")
+        driver.switch_to.window(driver.window_handles[-1])
+
+        # Wait for the button to be clickable and click it
+        try:
+            reageren_button = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.XPATH, "//button[@class='btn btn-primary OSFillParent' and text()='Reageren op deze Woning']"))
+            )
+            reageer_button_text = reageren_button.text  # Ensure we get the correct button
+            print(f"Clicking button: {reageer_button_text} on tab {i + 1}")
+            reageren_button.click()
+        except Exception as e:
+            print(f"Error clicking reageren button on tab {i + 1}: {e}")
+
+        # After clicking, switch back to the main tab (index 0)
+        time.sleep(random.uniform(1, 3))  # Random sleep before proceeding to the next div
+        driver.close()
+        driver.switch_to.window(driver.window_handles[0])
+    
+    notification.notify(
+        title='Succesvol',
+        message=f"Succesvol {os.getenv('MAX-INSCHRIJVINGEN')} keer ingeschreven op {os.getenv('URL')}",
+        app_icon=None,
+        timeout=30,
+    )
+except Exception as e:
+    notification.notify(
+        title='Error',
+        message=f'Check je .env variabelen: {e}',
+        app_icon=None,
+        timeout=30,
+    )
+finally:
+    driver.quit()
