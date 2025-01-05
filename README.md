@@ -16,3 +16,5 @@ Dit is een applicatie om automatisch in te schrijven voor WoningNet. Het is idea
     ```
 
 Ik raad het sterk aan om na de configuratie een Windows Scheduler of vergelijkbare functie op Mac in te stellen zodat het script elke paar weken wordt uitgevoerd.
+
+Built By Bilal Kerkeni
