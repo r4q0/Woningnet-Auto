@@ -1,5 +1,0 @@
-2025-03-15 17:29:26,059 - opening new tab
-2025-03-15 17:29:26,583 - Clicking button: Reageren op deze Woning on tab 1
-2025-03-15 17:29:31,399 - opening new tab
-2025-03-15 17:29:41,493 - Already Reacted to this listing on tab 2
-2025-03-15 17:29:44,471 - Succesvol 2 keer ingeschreven op https://amsterdam.mijndak.nl
