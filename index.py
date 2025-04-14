@@ -12,7 +12,6 @@ import os
 
 # Configure logging
 logging.basicConfig(filename='log.txt', level=logging.INFO, format='%(asctime)s - %(message)s')
-
 def run_script():
     load_dotenv()
 
@@ -131,7 +130,8 @@ def run_script():
 
 
 schedule.every().monday.do(run_script)
+schedule.every().friday.do(run_script)
 
 while True:
     schedule.run_pending()
-    time.sleep(60)  # Prevents high CPU usage
+    time.sleep(60)
